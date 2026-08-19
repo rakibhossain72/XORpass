@@ -20,8 +20,8 @@ def encode_key(key, private_key=None):
         encrypted_private_key = xor_encrypt(private_key, key.encode('utf-8'))
         return private_key, b64encode(encrypted_private_key).decode('utf-8')
     else:
-        # Generate RSA key pair
-        public_key, private_key = rsa.newkeys(512)
+        # Generate RSA key pair with enterprise-grade 2048 bit size
+        public_key, private_key = rsa.newkeys(2048)
         # Serialize and encrypt the private key
         encrypted_private_key = xor_encrypt(private_key.save_pkcs1(), key.encode('utf-8'))
         return public_key.save_pkcs1().decode('utf-8'), b64encode(encrypted_private_key).decode('utf-8')
@@ -30,15 +30,13 @@ def decode_key(private_key_enc, key):
 
     # Decrypt the private key using XOR decryption
     decrypted_private_key = xor_decrypt(b64decode(private_key_enc), key.encode('utf-8'))
-    # print(b64decode(private_key_enc))
-    
+
     # Convert decrypted_private_key from bytearray to bytes
     decrypted_private_key_bytes = bytes(decrypted_private_key)
 
     return decrypted_private_key_bytes
 
 def encode_data(data, public_key):
-    print(public_key)
     public_key = rsa.PublicKey.load_pkcs1(public_key.encode('utf-8'))
     encrypted_data = rsa.encrypt(data.encode('utf-8'), public_key)
     return b64encode(encrypted_data).decode('utf-8')
@@ -47,5 +45,3 @@ def decode_data(data, private_key):
     private_key = rsa.PrivateKey.load_pkcs1(private_key)
     decrypted_data = rsa.decrypt(b64decode(data), private_key)
     return decrypted_data.decode('utf-8')
-
-

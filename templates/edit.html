@@ -1,377 +1,168 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Password - XORpass</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Password - XORpass Enterprise</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body>
-    <div class="flex h-screen">
-        <div class="bg-gray-800 text-white w-64 py-8 px-4">
-            <button data-drawer-target="default-sidebar" data-drawer-toggle="default-sidebar"
-                aria-controls="default-sidebar" type="button"
-                class="inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 text-gray-400 hover:bg-gray-700 focus:ring-gray-600">
-                <span class="sr-only">Open sidebar</span>
-                <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path clip-rule="evenodd" fill-rule="evenodd"
-                        d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z">
-                    </path>
-                </svg>
-            </button>
-            <!-- Sidebar content here -->
-            <aside id="default-sidebar"
-                class="fixed mt-2 top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
-                aria-label="Sidenav">
-                <div class="overflow-y-auto py-5 px-3 h-full border-r border-gray-200 bg-gray-800 border-gray-700">
-                    <div class="flex items-center w-5 mb-6 h-10">
-                        <a class="flex title-font font-medium items-center text-white mb-4 md:mb-0">
-                            <img class="w-8 h-8 ml-2" src="/static/logo.png" alt="logo">
-                            <span class="ml-3 text-xl">XORpass</span>
-                        </a>
-                    </div>
-                    <ul class="space-y-2">
-                        <li>
-                            <a href="/"
-                                class="flex items-center p-2 text-base font-normal rounded-lg text-white hover:bg-gray-100 hover:bg-gray-700 group">
-                                <svg aria-hidden="true"
-                                    class="w-6 h-6 text-gray-400 transition duration-75 text-gray-400 group-hover:text-gray-900 group-hover:text-white"
-                                    fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path>
-                                    <path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path>
-                                </svg>
-                                <span class="ml-3">Passwords</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/settings"
-                                class="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg text-white hover:bg-gray-100 hover:bg-gray-700 group">
-                                <svg aria-hidden="true"
-                                    class="w-6 h-6 text-gray-400 transition duration-75 text-gray-400 group-hover:text-gray-900 group-hover:text-white"
-                                    fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd"
-                                        d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
-                                        clip-rule="evenodd"></path>
-                                </svg>
-                                <span class="ml-3">Settings</span>
-                            </a>
-                        </li>
-                        <ul id="dropdown-authentication" class="hidden py-2 space-y-2">
-                            <li>
-                                <a href="#"
-                                    class="flex items-center p-2 pl-11 w-full text-base font-normal text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 text-white hover:bg-gray-700">Sign
-                                    In</a>
-                            </li>
-                            <li>
-                                <a href="#"
-                                    class="flex items-center p-2 pl-11 w-full text-base font-normal text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 text-white hover:bg-gray-700">Sign
-                                    Up</a>
-                            </li>
-                            <li>
-                                <a href="#"
-                                    class="flex items-center p-2 pl-11 w-full text-base font-normal text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 text-white hover:bg-gray-700">Forgot
-                                    Password</a>
-                            </li>
-                        </ul>
-                        </li>
-                    </ul>
-                    <ul class="pt-5 mt-5 space-y-2 border-t border-gray-200 border-gray-700">
-                        <li>
-                            <a href="/logout"
-                                class="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg transition duration-75 hover:bg-gray-100 hover:bg-gray-700 text-white group">
-                                <svg aria-hidden="true"
-                                    class="flex-shrink-0 w-6 h-6 text-gray-400 transition duration-75 text-gray-400 group-hover:text-gray-900 group-hover:text-white"
-                                    fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
-                                    <path fill-rule="evenodd"
-                                        d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
-                                        clip-rule="evenodd"></path>
-                                </svg>
-                                <span class="ml-3">Logout</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#"
-                                class="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg transition duration-75 hover:bg-gray-100 hover:bg-gray-700 text-white group">
-                                <svg aria-hidden="true"
-                                    class="flex-shrink-0 w-6 h-6 text-gray-400 transition duration-75 text-gray-400 group-hover:text-gray-900 group-hover:text-white"
-                                    fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd"
-                                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-2 0c0 .993-.241 1.929-.668 2.754l-1.524-1.525a3.997 3.997 0 00.078-2.183l1.562-1.562C15.802 8.249 16 9.1 16 10zm-5.165 3.913l1.58 1.58A5.98 5.98 0 0110 16a5.976 5.976 0 01-2.516-.552l1.562-1.562a4.006 4.006 0 001.789.027zm-4.677-2.796a4.002 4.002 0 01-.041-2.08l-.08.08-1.53-1.533A5.98 5.98 0 004 10c0 .954.223 1.856.619 2.657l1.54-1.54zm1.088-6.45A5.974 5.974 0 0110 4c.954 0 1.856.223 2.657.619l-1.54 1.54a4.002 4.002 0 00-2.346.033L7.246 4.668zM12 10a2 2 0 11-4 0 2 2 0 014 0z"
-                                        clip-rule="evenodd"></path>
-                                </svg>
-                                <span class="ml-3">Help</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </aside>
+<body class="bg-gray-950 text-gray-100 font-sans antialiased min-h-screen flex flex-col">
+  <div class="flex flex-1 relative overflow-hidden">
+
+    <div id="sidebar-backdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-gray-950/80 backdrop-blur-sm z-30 hidden sm:hidden"></div>
+
+    <aside id="default-sidebar" class="fixed sm:static top-0 left-0 z-40 w-64 h-full transition-transform -translate-x-full sm:translate-x-0 bg-gray-900 border-r border-gray-800 flex flex-col justify-between">
+      <div class="p-5">
+        <div class="flex items-center justify-between mb-8">
+          <a href="/" class="flex items-center space-x-3">
+            <img class="w-8 h-8 rounded" src="/static/logo.png" alt="XORpass Logo">
+            <span class="text-xl font-bold tracking-tight text-white">XORpass</span>
+          </a>
+          <button onclick="toggleSidebar()" class="sm:hidden text-gray-400 hover:text-white">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
         </div>
-        <div class="flex-1 flex w-full items-center justify-center p-8 text-gray-300 bg-gray-900">
-            <div class="w-full rounded-lg shadow border md:mt-0 sm:max-w-md xl:p-0 bg-gray-800 border-gray-700">
-                <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
-                    <h1 class="text-xl font-bold leading-tight tracking-tight  md:text-2xl text-white">
-                        Edit Password
-                    </h1>
-                    <form class="space-y-4 md:space-y-6" action="/edit/{{data._id}}" method="POST">
-                        <input type="hidden" name="csrf_token" value = "{{ csrf_token() }}" />
-                        <div>
-                            <label for="website" class="block mb-2 text-sm font-medium text-white">Website</label>
-                            <input type="text" name="website" id="website"
-                                class="bg-gray-700 border border-gray-600 text-white sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="company.com" value="{{data.website}}" required="">
-                        </div>
-                        <div>
-                            <label for="email" class="block mb-2 text-sm font-medium text-white">Email</label>
-                            <div class="flex items-center justify-between gap-4">
-                                <input type="text" name="email" id="email"
-                                    class="bg-gray-700 border border-gray-600 text-white sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    placeholder="myemail@mail.com" value="{{data.email}}" required="">
-                                <button type="button" id="copy_email"
-                                    class="p-8 bg-trasparent border-gray-600 border hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-                                    <svg class="filter filter-invert" stroke-width="1" stroke="currentColor"
-                                        xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 16 16"
-                                        id="copy">
-                                        <path fill="#212121"
-                                            d="M4.00029246,4.08524952 L4,10.5 C4,11.8254834 5.03153594,12.9100387 6.33562431,12.9946823 L6.5,13 L10.9143985,13.000703 C10.7082819,13.5829319 10.1528467,14 9.5,14 L6,14 C4.34314575,14 3,12.6568542 3,11 L3,5.5 C3,4.84678131 3.41754351,4.29108512 4.00029246,4.08524952 Z M11.5,2 C12.3284271,2 13,2.67157288 13,3.5 L13,10.5 C13,11.3284271 12.3284271,12 11.5,12 L6.5,12 C5.67157288,12 5,11.3284271 5,10.5 L5,3.5 C5,2.67157288 5.67157288,2 6.5,2 L11.5,2 Z M11.5,3 L6.5,3 C6.22385763,3 6,3.22385763 6,3.5 L6,10.5 C6,10.7761424 6.22385763,11 6.5,11 L11.5,11 C11.7761424,11 12,10.7761424 12,10.5 L12,3.5 C12,3.22385763 11.7761424,3 11.5,3 Z">
-                                        </path>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                        <div>
-                            <label for="password" class="block mb-2 text-sm font-medium text-white">Password</label>
-                            <div class="flex items-center justify-between gap-4">
-                                <input type="password" name="password" id="password" placeholder="••••••••"
-                                    class="bg-gray-700 border border-gray-600 text-white sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    required="" value="{{data.password}}">
-                                <button type="button" id="show_password"
-                                    class="p-8 text-white border-gray-600 border bg-trasparent hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
 
-                                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg" stroke="#f8f7f7">
+        <nav class="space-y-1">
+          <a href="/" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl text-gray-400 hover:bg-gray-800 hover:text-white transition-colors">
+            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+            Passwords
+          </a>
+          <a href="/settings" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl text-gray-400 hover:bg-gray-800 hover:text-white transition-colors">
+            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            Settings
+          </a>
+        </nav>
+      </div>
 
-                                        <g id="SVGRepo_bgCarrier" stroke-width="0" />
+      <div class="p-5 border-t border-gray-800">
+        <a href="/logout" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl text-red-400 hover:bg-red-500/10 transition-colors">
+          <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+          Logout
+        </a>
+      </div>
+    </aside>
 
-                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"
-                                            stroke="#CCCCCC" stroke-width="0.384" />
+    <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+      <header class="bg-gray-900/50 backdrop-blur border-b border-gray-800 px-6 py-4 flex items-center justify-between sticky top-0 z-20">
+        <div class="flex items-center space-x-4">
+          <button onclick="toggleSidebar()" class="sm:hidden p-2 rounded-lg bg-gray-800 text-gray-400 hover:text-white">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+          <div>
+            <h1 class="text-xl font-bold text-white">Decrypted Credentials</h1>
+            <p class="text-xs text-gray-400">View and update website credentials.</p>
+          </div>
+        </div>
+      </header>
 
-                                        <g id="SVGRepo_iconCarrier">
-                                            <path
-                                                d="M15.0007 12C15.0007 13.6569 13.6576 15 12.0007 15C10.3439 15 9.00073 13.6569 9.00073 12C9.00073 10.3431 10.3439 9 12.0007 9C13.6576 9 15.0007 10.3431 15.0007 12Z"
-                                                stroke="#ffffff" stroke-width="2" stroke-linecap="round"
-                                                stroke-linejoin="round" />
-                                            <path
-                                                d="M12.0012 5C7.52354 5 3.73326 7.94288 2.45898 12C3.73324 16.0571 7.52354 19 12.0012 19C16.4788 19 20.2691 16.0571 21.5434 12C20.2691 7.94291 16.4788 5 12.0012 5Z"
-                                                stroke="#ffffff" stroke-width="2" stroke-linecap="round"
-                                                stroke-linejoin="round" />
-                                        </g>
+      <main class="p-6 max-w-2xl w-full mx-auto space-y-6">
 
-                                    </svg>
-                                </button>
-                                <button type="button" id="copy_password"
-                                    class="p-8 text-white border-gray-600 border bg-trasparent hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-                                    <svg class="filter filter-invert" stroke="currentColor"
-                                        xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 16 16"
-                                        id="copy">
-                                        <path fill="#212121"
-                                            d="M4.00029246,4.08524952 L4,10.5 C4,11.8254834 5.03153594,12.9100387 6.33562431,12.9946823 L6.5,13 L10.9143985,13.000703 C10.7082819,13.5829319 10.1528467,14 9.5,14 L6,14 C4.34314575,14 3,12.6568542 3,11 L3,5.5 C3,4.84678131 3.41754351,4.29108512 4.00029246,4.08524952 Z M11.5,2 C12.3284271,2 13,2.67157288 13,3.5 L13,10.5 C13,11.3284271 12.3284271,12 11.5,12 L6.5,12 C5.67157288,12 5,11.3284271 5,10.5 L5,3.5 C5,2.67157288 5.67157288,2 6.5,2 L11.5,2 Z M11.5,3 L6.5,3 C6.22385763,3 6,3.22385763 6,3.5 L6,10.5 C6,10.7761424 6.22385763,11 6.5,11 L11.5,11 C11.7761424,11 12,10.7761424 12,10.5 L12,3.5 C12,3.22385763 11.7761424,3 11.5,3 Z">
-                                        </path>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="flex items-center justify-between gap-4">
-                            <button type="submit"
-                                class="w-full mb-2 mt-2 text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Save</button>
-                            <button type="button" onclick="openModal()"
-                                class="w-full mb-2 mt-2 text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Delete</button>
-                        </div>
-                    </form>
-                    <div class="fixed z-10 inset-0 overflow-y-auto hidden" id="deleteModal">
-                        <!-- Modal Background -->
-                        <div
-                            class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
-                                <div class="absolute inset-0 bg-gray-700 opacity-50"></div>
-                            </div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="p-4 rounded-xl text-sm font-medium {% if category == 'success' %}bg-emerald-500/10 text-emerald-400 border border-emerald-500/20{% else %}bg-rose-500/10 text-rose-400 border border-rose-500/20{% endif %}" role="alert">
+          {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
 
-                            <!-- Modal Content -->
-                            <span class="hidden sm:inline-block sm:align-middle sm:h-screen"
-                                aria-hidden="true">&#8203;</span>
-                            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
-                                role="dialog" aria-modal="true" aria-labelledby="modal-headline">
-                                <!-- Modal Header -->
-                                <div class="bg-gray-900 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                                    <div class="sm:flex sm:items-start">
-                                        <div
-                                            class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                                            <!-- Heroicon name: exclamation -->
-                                            <svg class="h-6 w-6 text-red-600" xmlns="http://www.w3.org/2000/svg"
-                                                fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                                                aria-hidden="true">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M12 6v6m0 4v2m-6-2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2z">
-                                                </path>
-                                            </svg>
-                                        </div>
-                                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                                            <h3 class="text-lg leading-6 font-medium text-white" id="modal-headline">
-                                                Delete Confirmation
-                                            </h3>
-                                            <div class="mt-2">
-                                                <p class="text-sm text-gray-300">
-                                                    Are you sure you want to delete this item? This action cannot be
-                                                    undone.
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Modal Footer -->
-                                <div class="bg-gray-900 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                                    <form action="/delete" method="POST">
-                                        <input type="hidden" name="id" value="{{data._id}}">
-                                        <button type="submit"
-                                            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
-                                            Delete
-                                        </button>
-                                    </form>
-                                    <button onclick="closeModal()" type="button"
-                                        class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm">
-                                        Cancel
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div class="bg-gray-900 p-8 rounded-2xl border border-gray-800 shadow-xl space-y-6">
+          <form class="space-y-5" action="/edit/{{ data._id }}" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+            <div>
+              <label for="website" class="block text-sm font-medium text-gray-300 mb-2">Website</label>
+              <input type="text" name="website" id="website" value="{{ data.website }}" class="w-full px-4 py-3 bg-gray-950 border border-gray-800 rounded-xl text-sm text-white focus:outline-none focus:border-blue-500 transition-colors" required>
             </div>
+
+            <div>
+              <label for="email" class="block text-sm font-medium text-gray-300 mb-2">Email / Username</label>
+              <div class="flex items-center space-x-2">
+                <input type="text" name="email" id="email" value="{{ data.email }}" class="flex-1 px-4 py-3 bg-gray-950 border border-gray-800 rounded-xl text-sm text-white focus:outline-none focus:border-blue-500 transition-colors" required>
+                <button type="button" onclick="copyText('email')" class="px-4 py-3 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-xl text-sm font-medium transition-colors">Copy</button>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <label for="password" class="block text-sm font-medium text-gray-300">Decrypted Password</label>
+                <button type="button" onclick="generatePassword()" class="text-xs font-semibold text-blue-400 hover:text-blue-300 flex items-center">
+                  <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                  Generate New
+                </button>
+              </div>
+              <div class="flex items-center space-x-2">
+                <div class="relative flex-1">
+                  <input type="text" name="password" id="password" value="{{ data.password }}" class="w-full pl-4 pr-12 py-3 bg-gray-950 border border-gray-800 rounded-xl text-sm text-white font-mono focus:outline-none focus:border-blue-500 transition-colors" required>
+                </div>
+                <button type="button" onclick="copyText('password')" class="px-4 py-3 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-xl text-sm font-medium transition-colors">Copy</button>
+              </div>
+            </div>
+
+            <div class="pt-4 flex items-center space-x-4">
+              <button type="submit" class="flex-1 px-5 py-3 text-sm font-semibold rounded-xl text-white bg-blue-600 hover:bg-blue-500 shadow-lg shadow-blue-600/20 transition-all text-center">Save Changes</button>
+              <button type="button" onclick="openDeleteModal()" class="px-5 py-3 text-sm font-semibold rounded-xl text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 transition-all text-center">Delete</button>
+            </div>
+          </form>
         </div>
+      </main>
     </div>
+  </div>
+
+  <!-- Delete Modal -->
+  <div id="deleteModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-950/80 backdrop-blur-sm hidden">
+    <div class="bg-gray-900 border border-gray-800 rounded-2xl max-w-md w-full p-6 space-y-6 shadow-2xl">
+      <div class="flex items-center space-x-3 text-rose-400">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+        <h3 class="text-lg font-bold text-white">Confirm Deletion</h3>
+      </div>
+      <p class="text-sm text-gray-400">Are you sure you want to delete this password entry? This action cannot be undone.</p>
+      <div class="flex items-center justify-end space-x-3">
+        <button type="button" onclick="closeDeleteModal()" class="px-4 py-2 text-sm font-semibold text-gray-400 hover:text-white">Cancel</button>
+        <form action="/delete" method="POST">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+          <input type="hidden" name="id" value="{{ data._id }}" />
+          <button type="submit" class="px-4 py-2 text-sm font-semibold rounded-xl text-white bg-rose-600 hover:bg-rose-500 transition-colors">Delete Entry</button>
+        </form>
+      </div>
     </div>
-    </div>
+  </div>
+
+  <script>
+    function toggleSidebar() {
+      const sidebar = document.getElementById('default-sidebar');
+      const backdrop = document.getElementById('sidebar-backdrop');
+      sidebar.classList.toggle('-translate-x-full');
+      backdrop.classList.toggle('hidden');
+    }
+
+    function openDeleteModal() {
+      document.getElementById('deleteModal').classList.remove('hidden');
+    }
+
+    function closeDeleteModal() {
+      document.getElementById('deleteModal').classList.add('hidden');
+    }
+
+    function copyText(elementId) {
+      const el = document.getElementById(elementId);
+      navigator.clipboard.writeText(el.value);
+    }
+
+    async function generatePassword() {
+      try {
+        const res = await fetch('/generate-password?length=18');
+        const data = await res.json();
+        document.getElementById('password').value = data.password;
+      } catch (err) {
+        console.error('Failed to generate password:', err);
+      }
+    }
+  </script>
 </body>
-<script>
-    tailwind.config = {
-        darkMode: 'class',
-        theme: {
-            extend: {
-                colors: {
-                    primary: { "50": "#eff6ff", "100": "#dbeafe", "200": "#bfdbfe", "300": "#93c5fd", "400": "#60a5fa", "500": "#3b82f6", "600": "#2563eb", "700": "#1d4ed8", "800": "#1e40af", "900": "#1e3a8a", "950": "#172554" }
-                }
-            },
-            fontFamily: {
-                'body': [
-                    'Inter',
-                    'ui-sans-serif',
-                    'system-ui',
-                    '-apple-system',
-                    'system-ui',
-                    'Segoe UI',
-                    'Roboto',
-                    'Helvetica Neue',
-                    'Arial',
-                    'Noto Sans',
-                    'sans-serif',
-                    'Apple Color Emoji',
-                    'Segoe UI Emoji',
-                    'Segoe UI Symbol',
-                    'Noto Color Emoji'
-                ],
-                'sans': [
-                    'Inter',
-                    'ui-sans-serif',
-                    'system-ui',
-                    '-apple-system',
-                    'system-ui',
-                    'Segoe UI',
-                    'Roboto',
-                    'Helvetica Neue',
-                    'Arial',
-                    'Noto Sans',
-                    'sans-serif',
-                    'Apple Color Emoji',
-                    'Segoe UI Emoji',
-                    'Segoe UI Symbol',
-                    'Noto Color Emoji'
-                ]
-            }
-        }
-    }
-
-    const passwordField = document.getElementById('password');
-    const showPasswordButton = document.getElementById('show_password');
-
-    // Add event listener to the show password button
-    showPasswordButton.addEventListener('click', function () {
-        // Check if the password field is currently of type "password"
-        if (passwordField.type === 'password') {
-            // If yes, change it to type "text" to reveal the password
-            passwordField.type = 'text';
-            // Change the button text to "Hide Password"
-        } else {
-            // If not, change it back to type "password" to hide the password
-            passwordField.type = 'password';
-            // Change the button text to "Show Password
-        }
-    });
-
-    // copy password
-    // Get a reference to the copy button and the text to copy
-    const copyButton = document.getElementById('copy_email');
-    const textToCopy = document.getElementById('email');
-
-    // Add event listener to the copy button
-    copyButton.addEventListener('click', function () {
-        // Select the text inside the text input or text area
-        textToCopy.focus();
-        textToCopy.select();
-
-        // For mobile devices
-        if (document.execCommand('selectAll')) {
-            document.execCommand('selectAll', false, null);
-        }
-
-        // Copy the selected text to the clipboard
-        document.execCommand('copy');
-
-        // Alert the user that the text has been copied
-    });
-
-    const copyButton2 = document.getElementById('copy_password');
-    const textToCopy2 = document.getElementById('password');
-
-    // Add event listener to the copy button
-    copyButton2.addEventListener('click', function () {
-        // Select the text inside the text input or text area
-        passwordField.type = 'text';
-        textToCopy2.focus();
-        textToCopy2.select();
-
-        // For mobile devices
-        if (document.execCommand('selectAll')) {
-            document.execCommand('selectAll', false, null);
-
-        }
-        // Copy the selected text to the clipboard
-        document.execCommand('copy');
-        passwordField.type = 'password';
-    })
-
-    // Function to open the modal
-    function openModal() {
-        document.getElementById('deleteModal').classList.remove('hidden');
-    }
-
-    // Function to close the modal
-    function closeModal() {
-        document.getElementById('deleteModal').classList.add('hidden');
-    }
-
-</script>
 
 </html>
