@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - SECRET_KEY=enterprise-docker-secret-key-change-in-prod
+      - DATABASE_URL=sqlite+aiosqlite:////app/data/xorpass.db
+      - DB_ENCRYPTION_SECRET=docker-db-storage-secret-key
+    volumes:
+      - xorpass_data:/app/data
+    restart: unless-stopped
+
+volumes:
+  xorpass_data:

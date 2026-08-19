@@ -1,5 +1,5 @@
 import pytest
-import encryption
+import app.core.encryption as encryption
 
 def test_key_encoding_decoding():
     password = "MyMasterPassword123!"
