@@ -7,6 +7,13 @@ async def get_user_by_email(db: AsyncSession, email: str) -> User | None:
     result = await db.execute(select(User).filter(User.email == email))
     return result.scalars().first()
 
+async def get_user_password_hash(db: AsyncSession, email: str) -> str | None:
+    result = await db.execute(
+        select(User.password).filter(User.email == email)
+    )
+    row = result.first()
+    return row[0] if row else None
+
 async def create_user(db: AsyncSession, email: str, password_hash: str, public_key: str, private_key: str) -> User:
     user = User(
         email=email,

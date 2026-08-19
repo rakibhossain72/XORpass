@@ -1,7 +1,8 @@
 import re
 import secrets
 import string
-from fastapi import APIRouter, Request, Form, Query, Depends, status
+import asyncio
+from fastapi import APIRouter, Request, Form, Query, Depends, Header, status
 from fastapi.responses import RedirectResponse, HTMLResponse, JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -11,6 +12,8 @@ import app.db.crud as crud
 import app.core.encryption as encryption
 import app.core.cache as cache
 from app.core.templates import DynamicTemplates
+from app.core.tasks import create_task, is_active
+from app.core.migration import migrate_passwords
 
 router = APIRouter()
 templates = DynamicTemplates(directory="templates")
@@ -296,60 +299,59 @@ async def settings_action(
     password: str = Form(...),
     new_password: str = Form(...),
     confirm_new_password: str = Form(...),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
+    x_requested_with: str | None = Header(None)
 ):
+    is_ajax = x_requested_with == "XMLHttpRequest"
+
+    def error_response(message: str):
+        if is_ajax:
+            return JSONResponse({"error": message}, status_code=400)
+        set_flash(request, message, "danger")
+        return RedirectResponse(url="/settings", status_code=status.HTTP_302_FOUND)
+
     user_id = request.session.get("user_id")
     if not user_id:
+        if is_ajax:
+            return JSONResponse({"error": "Unauthorized"}, status_code=401)
         return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
+
+    if is_active(user_id):
+        return error_response("A migration is already in progress")
 
     user_data = await crud.get_user_by_email(db, user_id)
     if not user_data or not check_password_hash(user_data.password, password):
-        set_flash(request, "Invalid current password", "danger")
-        return RedirectResponse(url="/settings", status_code=status.HTTP_302_FOUND)
+        return error_response("Invalid current password")
 
     if new_password != confirm_new_password:
-        set_flash(request, "Passwords do not match", "danger")
-        return RedirectResponse(url="/settings", status_code=status.HTTP_302_FOUND)
+        return error_response("Passwords do not match")
 
     if len(new_password) < 8 or len(new_password) > 64:
-        set_flash(request, "Password must be between 8 and 64 characters long", "danger")
-        return RedirectResponse(url="/settings", status_code=status.HTTP_302_FOUND)
+        return error_response("Password must be between 8 and 64 characters long")
 
     if not any(char.isdigit() for char in new_password):
-        set_flash(request, "Password must contain at least one number", "danger")
-        return RedirectResponse(url="/settings", status_code=status.HTTP_302_FOUND)
+        return error_response("Password must contain at least one number")
 
     if not any(char.isupper() for char in new_password):
-        set_flash(request, "Password must contain at least one uppercase letter", "danger")
-        return RedirectResponse(url="/settings", status_code=status.HTTP_302_FOUND)
+        return error_response("Password must contain at least one uppercase letter")
 
     if not any(char.islower() for char in new_password):
-        set_flash(request, "Password must contain at least one lowercase letter", "danger")
-        return RedirectResponse(url="/settings", status_code=status.HTTP_302_FOUND)
+        return error_response("Password must contain at least one lowercase letter")
 
     if any(char.isspace() for char in new_password):
-        set_flash(request, "Password must not contain any spaces", "danger")
-        return RedirectResponse(url="/settings", status_code=status.HTTP_302_FOUND)
+        return error_response("Password must not contain any spaces")
 
     if new_password == password:
-        set_flash(request, "New password cannot be the same as the old password", "danger")
-        return RedirectResponse(url="/settings", status_code=status.HTTP_302_FOUND)
+        return error_response("New password cannot be the same as the old password")
 
-    try:
-        private_key = encryption.decode_key(user_data.private_key, password)
-        new_private_key_enc = encryption.encode_key(new_password, private_key=private_key)[1]
-        new_password_hash = generate_password_hash(new_password)
+    task_id = create_task(user_id)
+    asyncio.create_task(migrate_passwords(user_id, password, new_password, task_id))
 
-        updated_fields = {
-            "private_key": new_private_key_enc,
-            "password": new_password_hash
-        }
-        await crud.update_user(db, user_id, updated_fields)
-        set_flash(request, "Master password updated successfully", "success")
-        return RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
-    except Exception:
-        set_flash(request, "Failed to update master password", "danger")
-        return RedirectResponse(url="/settings", status_code=status.HTTP_302_FOUND)
+    if is_ajax:
+        return JSONResponse({"task_id": task_id})
+
+    set_flash(request, "Master password update started", "success")
+    return RedirectResponse(url="/settings", status_code=status.HTTP_302_FOUND)
 
 @router.get("/generate-password")
 async def generate_password_api(

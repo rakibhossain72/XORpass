@@ -70,10 +70,12 @@
         {% endif %}
         {% endwith %}
 
-        <div class="bg-gray-900 p-8 rounded-2xl border border-gray-800 shadow-xl space-y-6">
+        <div id="form-error" class="hidden p-4 rounded-xl text-sm font-medium bg-rose-500/10 text-rose-400 border border-rose-500/20" role="alert"></div>
+
+        <div id="password-form-card" class="bg-gray-900 p-8 rounded-2xl border border-gray-800 shadow-xl space-y-6">
           <h2 class="text-lg font-bold text-white pb-4 border-b border-gray-800">Change Master Password</h2>
 
-          <form class="space-y-5" action="/settings" method="POST">
+          <form id="settings-form" class="space-y-5" action="/settings" method="POST">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 
             <div>
@@ -92,9 +94,40 @@
             </div>
 
             <div class="pt-4 flex items-center space-x-4">
-              <button type="submit" class="flex-1 px-5 py-3 text-sm font-semibold rounded-xl text-white bg-blue-600 hover:bg-blue-500 shadow-lg shadow-blue-600/20 transition-all text-center">Update Master Password</button>
+              <button id="submit-btn" type="submit" class="flex-1 px-5 py-3 text-sm font-semibold rounded-xl text-white bg-blue-600 hover:bg-blue-500 shadow-lg shadow-blue-600/20 transition-all text-center">Update Master Password</button>
             </div>
           </form>
+        </div>
+
+        <div id="migration-card" class="hidden bg-gray-900 p-8 rounded-2xl border border-gray-800 shadow-xl space-y-6">
+          <h2 class="text-lg font-bold text-white pb-4 border-b border-gray-800">Migrating Passwords</h2>
+
+          <div class="space-y-4">
+            <div class="flex items-center justify-between text-sm">
+              <span id="migration-status" class="text-gray-400">Encrypting vault with new master key...</span>
+              <span id="migration-count" class="text-gray-500 font-mono text-xs"></span>
+            </div>
+
+            <div class="w-full bg-gray-800 rounded-full h-3 overflow-hidden">
+              <div id="migration-bar" class="h-full rounded-full bg-blue-600 transition-all duration-300 ease-out" style="width: 0%"></div>
+            </div>
+
+            <div id="migration-complete" class="hidden text-center space-y-4 pt-2">
+              <div class="flex items-center justify-center space-x-2 text-emerald-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                <span class="text-sm font-medium">All passwords re-encrypted successfully</span>
+              </div>
+              <a href="/" class="inline-block px-6 py-3 text-sm font-semibold rounded-xl text-white bg-blue-600 hover:bg-blue-500 shadow-lg shadow-blue-600/20 transition-all">Return to Vault</a>
+            </div>
+
+            <div id="migration-error" class="hidden text-center space-y-4 pt-2">
+              <div class="flex items-center justify-center space-x-2 text-rose-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                <span id="migration-error-msg" class="text-sm font-medium">Migration failed</span>
+              </div>
+              <button onclick="resetForm()" class="inline-block px-6 py-3 text-sm font-semibold rounded-xl text-white bg-gray-700 hover:bg-gray-600 transition-all">Try Again</button>
+            </div>
+          </div>
         </div>
       </main>
     </div>
@@ -106,6 +139,110 @@
       const backdrop = document.getElementById('sidebar-backdrop');
       sidebar.classList.toggle('-translate-x-full');
       backdrop.classList.toggle('hidden');
+    }
+
+    let pollInterval = null;
+
+    document.getElementById('settings-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const btn = document.getElementById('submit-btn');
+      btn.disabled = true;
+      btn.textContent = 'Updating...';
+      btn.classList.add('opacity-50', 'cursor-not-allowed');
+
+      const formError = document.getElementById('form-error');
+      formError.classList.add('hidden');
+
+      const formData = new FormData(this);
+
+      try {
+        const res = await fetch('/settings', {
+          method: 'POST',
+          headers: { 'X-Requested-With': 'XMLHttpRequest' },
+          body: formData
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          formError.textContent = data.error || 'An error occurred';
+          formError.classList.remove('hidden');
+          btn.disabled = false;
+          btn.textContent = 'Update Master Password';
+          btn.classList.remove('opacity-50', 'cursor-not-allowed');
+          return;
+        }
+
+        document.getElementById('password-form-card').classList.add('hidden');
+        document.getElementById('migration-card').classList.remove('hidden');
+
+        pollProgress(data.task_id);
+      } catch (err) {
+        formError.textContent = 'Network error. Please try again.';
+        formError.classList.remove('hidden');
+        btn.disabled = false;
+        btn.textContent = 'Update Master Password';
+        btn.classList.remove('opacity-50', 'cursor-not-allowed');
+      }
+    });
+
+    function pollProgress(taskId) {
+      pollInterval = setInterval(async () => {
+        try {
+          const res = await fetch('/api/migration/progress?task_id=' + encodeURIComponent(taskId));
+          const data = await res.json();
+
+          if (data.status === 'completed') {
+            clearInterval(pollInterval);
+            pollInterval = null;
+            document.getElementById('migration-bar').style.width = '100%';
+            document.getElementById('migration-status').textContent = 'Migration complete';
+            document.getElementById('migration-count').textContent = '';
+            document.getElementById('migration-complete').classList.remove('hidden');
+            return;
+          }
+
+          if (data.status === 'failed') {
+            clearInterval(pollInterval);
+            pollInterval = null;
+            document.getElementById('migration-error-msg').textContent = data.error || 'Migration failed';
+            document.getElementById('migration-error').classList.remove('hidden');
+            return;
+          }
+
+          const pct = data.progress || 0;
+          document.getElementById('migration-bar').style.width = pct + '%';
+          document.getElementById('migration-count').textContent = data.current + ' / ' + data.total;
+          document.getElementById('migration-status').textContent = 'Re-encrypting passwords...';
+        } catch (err) {
+          // keep polling on transient network errors
+        }
+      }, 500);
+    }
+
+    function resetForm() {
+      if (pollInterval) {
+        clearInterval(pollInterval);
+        pollInterval = null;
+      }
+      document.getElementById('migration-card').classList.add('hidden');
+      document.getElementById('migration-error').classList.add('hidden');
+      document.getElementById('migration-complete').classList.add('hidden');
+      document.getElementById('migration-bar').style.width = '0%';
+      document.getElementById('migration-status').textContent = 'Encrypting vault with new master key...';
+      document.getElementById('migration-count').textContent = '';
+
+      const formCard = document.getElementById('password-form-card');
+      formCard.classList.remove('hidden');
+
+      const form = document.getElementById('settings-form');
+      form.reset();
+
+      const btn = document.getElementById('submit-btn');
+      btn.disabled = false;
+      btn.textContent = 'Update Master Password';
+      btn.classList.remove('opacity-50', 'cursor-not-allowed');
     }
   </script>
 </body>

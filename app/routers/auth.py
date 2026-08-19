@@ -32,8 +32,8 @@ async def login_action(
         return RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
 
     clean_email = email.strip()
-    db_user = await crud.get_user_by_email(db, clean_email)
-    if db_user and check_password_hash(db_user.password, password):
+    password_hash = await crud.get_user_password_hash(db, clean_email)
+    if password_hash and check_password_hash(password_hash, password):
         request.session["user_id"] = clean_email
         return RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
     else:

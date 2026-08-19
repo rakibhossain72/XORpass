@@ -5,13 +5,11 @@ from jinja2 import Environment, FileSystemLoader
 class DynamicTemplates:
     def __init__(self, directory: str = "templates"):
         self.directory = directory
+        self.env = Environment(loader=FileSystemLoader(directory), autoescape=True)
 
     def TemplateResponse(self, request, name: str, context: dict = None, status_code: int = 200, **kwargs):
         if context is None:
             context = {}
-
-        # Fresh Jinja Environment per render to avoid cached global state issues
-        env = Environment(loader=FileSystemLoader(self.directory), autoescape=True)
 
         def csrf_token():
             token = request.session.get("_csrf_token")
@@ -32,11 +30,13 @@ class DynamicTemplates:
                 return [(cat, msg)]
             return [msg]
 
-        env.globals["csrf_token"] = csrf_token
-        env.globals["get_flashed_messages"] = get_flashed_messages
-
-        render_context = {"request": request, **context}
-        template = env.get_template(name)
+        render_context = {
+            "request": request,
+            "csrf_token": csrf_token,
+            "get_flashed_messages": get_flashed_messages,
+            **context,
+        }
+        template = self.env.get_template(name)
         content = template.render(render_context)
 
         from fastapi.responses import HTMLResponse

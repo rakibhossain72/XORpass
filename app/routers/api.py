@@ -1,7 +1,8 @@
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Query, Request
 from fastapi.responses import JSONResponse
 import app.routers.vault as vault
 import app.core.cache as cache
+from app.core import tasks
 
 router = APIRouter(prefix="/api")
 
@@ -27,6 +28,15 @@ async def generate_password_api(
         use_symbols=sym_bool
     )
     return JSONResponse({'password': pwd})
+
+@router.get("/migration/progress")
+async def migration_progress(request: Request, task_id: str = Query(...)):
+    user_id = request.session.get("user_id")
+    if not user_id:
+        return JSONResponse({"error": "Unauthorized"}, status_code=401)
+    if not tasks.task_belongs_to(task_id, user_id):
+        return JSONResponse({"error": "Not found"}, status_code=404)
+    return JSONResponse(tasks.get_progress(task_id))
 
 @router.get("/cache/clear")
 async def clear_cache():
