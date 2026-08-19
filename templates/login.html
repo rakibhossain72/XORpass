@@ -1,116 +1,58 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - XORpass</title>
+    <title>Sign In - XORpass Enterprise</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body>
-    <section class="bg-gray-900">
-        <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-            <a href="#" class="flex items-center mb-6 text-2xl font-semibold text-gray-900 text-white">
-                <img class="w-8 h-8 mr-2" src="/static/logo.png"
-                    alt="logo">
-                XORpass
+<body class="bg-gray-950 text-gray-100 font-sans antialiased min-h-screen flex items-center justify-center p-6">
+    <div class="w-full max-w-md space-y-8">
+        <div class="text-center space-y-3">
+            <a href="/" class="inline-flex items-center space-x-3">
+                <img class="w-10 h-10 rounded-xl" src="/static/logo.png" alt="XORpass Logo">
+                <span class="text-2xl font-extrabold tracking-tight text-white">XORpass</span>
             </a>
-            <div
-                class="w-full rounded-lg shadow border md:mt-0 sm:max-w-md xl:p-0 bg-gray-800 border-gray-700">
-                <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
-                    <h1
-                        class="text-xl font-bold leading-tight tracking-tight  md:text-2xl text-white">
-                        Sign in to your account
-                    </h1>
-                    <form class="space-y-4 md:space-y-6" action="/login" method="POST">
-                        <input type="hidden" name="csrf_token" value = "{{ csrf_token() }}" /> 
-                        <div>
-                            <label for="email" class="block mb-2 text-sm font-medium text-white">Your
-                                email</label>
-                            <input type="email" name="email" id="email"
-                                class="bg-gray-700 border border-gray-600 text-white sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="name@company.com" required="">
-                        </div>
-                        <div>
-                            <label for="password"
-                                class="block mb-2 text-sm font-medium text-white">Password</label>
-                            <input type="password" name="password" id="password" placeholder="••••••••"
-                                class="bg-gray-700 border border-gray-600 text-white sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                required="">
-                        </div>
-                        {% with messages = get_flashed_messages()%}
-                        {% if messages %}
-                        {% for message in messages %}
-                        <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-100 dark:bg-gray-800 dark:text-red-400"
-                            role="alert">
-                            {{message}}
-                        </div>
-                        {%endfor%}
-                        {%endif%}
-                        {%endwith%}
-                        <div class="flex items-center justify-between">
-                        <button type="submit"
-                            class="w-full text-white mt-2 bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Login</button>
-                        </div>
-                        <p class="text-sm font-light text-gray-400 dark:text-gray-400">
-                            Don’t have an account yet? <a href="/signup"
-                                class="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign
-                                up</a>
-                        </p>
-                    </form>
+            <h2 class="text-xl font-bold text-gray-200">Sign in to your account</h2>
+            <p class="text-xs text-gray-400">Enterprise Password Management & Key Vault</p>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="p-4 rounded-xl text-sm font-medium bg-rose-500/10 text-rose-400 border border-rose-500/20" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <div class="bg-gray-900 p-8 rounded-2xl border border-gray-800 shadow-2xl space-y-6">
+            <form class="space-y-5" action="/login" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-300 mb-2">Email Address</label>
+                    <input type="email" name="email" id="email" placeholder="name@company.com" class="w-full px-4 py-3 bg-gray-950 border border-gray-800 rounded-xl text-sm text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-colors" required autofocus>
                 </div>
+
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-300 mb-2">Master Password</label>
+                    <input type="password" name="password" id="password" placeholder="••••••••" class="w-full px-4 py-3 bg-gray-950 border border-gray-800 rounded-xl text-sm text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-colors" required>
+                </div>
+
+                <button type="submit" class="w-full py-3 px-4 text-sm font-semibold rounded-xl text-white bg-blue-600 hover:bg-blue-500 shadow-lg shadow-blue-600/20 transition-all text-center">Sign In</button>
+            </form>
+
+            <div class="text-center pt-2 border-t border-gray-800/80">
+                <p class="text-xs text-gray-400">
+                    Don't have an account? <a href="/signup" class="font-semibold text-blue-400 hover:text-blue-300">Create an account</a>
+                </p>
             </div>
         </div>
-    </section>
+    </div>
 </body>
-<script>
-    tailwind.config = {
-        darkMode: 'class',
-        theme: {
-            extend: {
-                colors: {
-                    primary: { "50": "#eff6ff", "100": "#dbeafe", "200": "#bfdbfe", "300": "#93c5fd", "400": "#60a5fa", "500": "#3b82f6", "600": "#2563eb", "700": "#1d4ed8", "800": "#1e40af", "900": "#1e3a8a", "950": "#172554" }
-                }
-            },
-            fontFamily: {
-                'body': [
-                    'Inter',
-                    'ui-sans-serif',
-                    'system-ui',
-                    '-apple-system',
-                    'system-ui',
-                    'Segoe UI',
-                    'Roboto',
-                    'Helvetica Neue',
-                    'Arial',
-                    'Noto Sans',
-                    'sans-serif',
-                    'Apple Color Emoji',
-                    'Segoe UI Emoji',
-                    'Segoe UI Symbol',
-                    'Noto Color Emoji'
-                ],
-                'sans': [
-                    'Inter',
-                    'ui-sans-serif',
-                    'system-ui',
-                    '-apple-system',
-                    'system-ui',
-                    'Segoe UI',
-                    'Roboto',
-                    'Helvetica Neue',
-                    'Arial',
-                    'Noto Sans',
-                    'sans-serif',
-                    'Apple Color Emoji',
-                    'Segoe UI Emoji',
-                    'Segoe UI Symbol',
-                    'Noto Color Emoji'
-                ]
-            }
-        }
-    }
-</script>
 
 </html>
